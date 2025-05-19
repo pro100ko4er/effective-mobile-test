@@ -1,6 +1,5 @@
 import { Op } from "sequelize";
 import Appeal from "../models/AppealModel.js";
-import moment from "moment";
 export default class AppealService {
     static async Create(subject, message) {
         const create = await Appeal.create({subject, message})
