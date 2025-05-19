@@ -1,6 +1,5 @@
 import { Op } from "sequelize";
 import Appeal from "../models/AppealModel.js";
-import moment from "moment";
 import ApiError from "../error/ApiError.js";
 export default class AppealService {
     static async Create(subject, message) {
