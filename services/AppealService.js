@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import Appeal from "../models/AppealModel.js";
 import moment from "moment";
+import ApiError from "../error/ApiError.js";
 export default class AppealService {
     static async Create(subject, message) {
         const create = await Appeal.create({subject, message})
@@ -14,6 +15,9 @@ export default class AppealService {
                 status: "Новое"
             }
         })
+        if(handling[0] <= 0) {
+            throw ApiError.BadRequest("Обращение не найдено!")
+        }
         return handling
     }   
 
@@ -21,9 +25,14 @@ export default class AppealService {
         const success = await Appeal.update({status: "Завершено", answer}, {
             where: {
             id,
-            status: "В работе" || "Новое"
+            status: {
+               [Op.in]: ['В работе', 'Новое']
+            }
             }
         })
+          if(success[0] <= 0) {
+            throw ApiError.BadRequest("Обращение не найдено!")
+        }
         return success
     }
 
@@ -31,16 +40,23 @@ export default class AppealService {
         const close = await Appeal.update({status: "Отменено", answer}, {
             where: {
                 id,
-                status: "В работе" || "Новое"
+                status: {
+               [Op.in]: ['В работе', 'Новое']
+            }
             }
         })
+        if(close[0] <= 0) {
+            throw ApiError.BadRequest("Обращение не найдено!")
+        }
         return close
     }
 
     static async CloseAllInWork(answer) {
         const closeAllInWork = await Appeal.update({status: "Отменено", answer}, {
             where: {
-                status: "В работе"
+                status: {
+               [Op.in]: ['В работе', 'Новое']
+            }
             }
         })
         return closeAllInWork
@@ -48,6 +64,9 @@ export default class AppealService {
 
     static async Get(id) {
         const appeal = await Appeal.findByPk(id)
+        if(!appeal) {
+            throw ApiError.BadRequest("Обращение не найдено!")
+        }
         return appeal
     }
 
