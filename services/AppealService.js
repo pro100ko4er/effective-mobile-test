@@ -1,5 +1,6 @@
+import { Op } from "sequelize";
 import Appeal from "../models/AppealModel.js";
-
+import moment from "moment";
 export default class AppealService {
     static async Create(subject, message) {
         const create = await Appeal.create({subject, message})
@@ -47,17 +48,37 @@ export default class AppealService {
         return appeal
     }
 
-    static async GetAll(date_one, date_two, limit, page) {
+    static async GetAll(date_one, date_two, limit = 100, page = 1) {
         limit = Number(limit)
         page = Number(page)
-        const offset = limit * page
-        const all = await Appeal.findAndCountAll({
-            where: {
-                limit,
-                offset
-            }
-        })
-        return all
+        const offset = limit * (page - 1)
+        const where = {};
+
+
+if (date_one && date_two) {
+  where.createdAt = {
+    [Op.between]: [
+      `${date_one} 00:00:00`,
+      `${date_two} 23:59:59`
+    ]
+  };
+} else if (date_one) {
+  where.createdAt = {
+    [Op.gte]: `${date_one} 00:00:00`
+  };
+} else if (date_two) {
+  where.createdAt = {
+    [Op.lte]: `${date_two} 23:59:59`
+  };
+}
+
+ 
+const all = await Appeal.findAndCountAll({
+  where,
+  limit,
+  offset
+});
+return all
     }
 
 }

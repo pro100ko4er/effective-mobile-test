@@ -1,0 +1,36 @@
+Документация
+
+BASE_URL http://localhost:ENV_PORT || 3000
+
+POST /create {
+    subject*: string,
+    message*: string
+}
+
+PUT /handling/id {
+    id*: string | number
+}
+
+PUT /success {
+    id*: number | string,
+    answer: string
+}
+
+PUT /close {
+    id*: number | string,
+    answer: string
+}
+
+PUT /close-all-in-work {
+    answer*: string
+}
+
+GET /id {
+    id*: number | string
+}
+
+GET /all {
+    page: number | string,
+    limit: number | string,
+    date_one: string FORMAT(ГГГГ-ММ-ДД)
+}
