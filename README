@@ -1,4 +1,4 @@
-Документация
+Документация второй вариант (валидация и проверка статусов обращений)
 
 BASE_URL http://localhost:ENV_PORT || 3000
 
@@ -34,3 +34,4 @@ GET /all {
     limit: number | string,
     date_one: string FORMAT(ГГГГ-ММ-ДД)
 }
+

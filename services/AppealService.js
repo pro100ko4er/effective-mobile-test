@@ -10,7 +10,8 @@ export default class AppealService {
     static async Handling(id) {
         const handling = await Appeal.update({status: "В работе"}, {
             where: {
-                id
+                id,
+                status: "Новое"
             }
         })
         return handling
@@ -19,7 +20,8 @@ export default class AppealService {
     static async Success(id, answer) {
         const success = await Appeal.update({status: "Завершено", answer}, {
             where: {
-            id
+            id,
+            status: "В работе" || "Новое"
             }
         })
         return success
@@ -28,7 +30,8 @@ export default class AppealService {
     static async Close(id, answer) {
         const close = await Appeal.update({status: "Отменено", answer}, {
             where: {
-                id
+                id,
+                status: "В работе" || "Новое"
             }
         })
         return close
